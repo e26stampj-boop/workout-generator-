@@ -1,4 +1,4 @@
-from .ui_cli import create_or_update_profile, generate_for_user
+from src.ui_cli import create_or_update_profile, generate_for_user
 from .models import UserProfile
 from . import datastore
 
