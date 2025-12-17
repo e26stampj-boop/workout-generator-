@@ -1,0 +1,9 @@
+This is a placeholder text file describing the screen recording script for Criterion D.
+Record a 5-minute video with the following flow:
+1. Begin by showing the six agreed success criteria from Crit_A_Planning.pdf.
+2. Launch the CLI (`python3 -m src.main`).
+3. Demonstrate option 1 by entering a new profile with mixed equipment and confirm the JSON file contents.
+4. Demonstrate option 2 by generating a plan for that user, scrolling through each day and narrating how the split meets the goal.
+5. Open `data/plans.json` to prove persistence, then close and reopen the program and show the plan is still stored.
+6. Attempt to enter an invalid user id to show the graceful error message.
+Replace this placeholder with the final MP4 recording before submission.

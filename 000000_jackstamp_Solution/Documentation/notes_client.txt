@@ -1,0 +1,4 @@
+Client Interview Notes
+05 Feb call: Elena described copying workouts into Google Sheets and wanting automation. Quote: "Copying and pasting workouts between tabs wastes thirty minutes and I keep reusing the same lifts by mistake."
+08 Feb design review: Confirmed JSON storage was acceptable and requested that exercises with difficulty >3 be hidden for novices.
+12 Feb handover: "Saving plans to JSON means I can audit anyone's history in seconds" and requested ability to tag plans with coaching notes.

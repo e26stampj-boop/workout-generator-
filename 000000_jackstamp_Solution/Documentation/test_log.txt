@@ -1,0 +1,7 @@
+Manual Test Log
+T1 Profile persistence: Created user "sloane" via CLI option 1, verified single upsert entry in data/users.json.
+T2 Plan generation: Generated plan for sloane (3 days). Output displayed Day 1-3 with appropriate splits.
+T3 Repeat avoidance: Generated 4th plan and confirmed exercises from previous 3 plans absent via diff of data/plans.json.
+T4 Equipment filter: Created user with only bodyweight gear; generator only emitted bodyweight movements.
+T5 Error handling: Entered invalid user id -> CLI printed "No user found."
+T6 Persistence proof: Opened plans.json after rerunning CLI, verifying appended plan.
