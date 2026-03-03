@@ -1,0 +1,30 @@
+erDiagram
+    exercises {
+        INTEGER id PK "AUTOINCREMENT"
+        TEXT name UK "NOT NULL UNIQUE"
+        TEXT muscle_group "NOT NULL"
+        TEXT sub_muscle_group "NOT NULL"
+        TEXT exercise_type "compound or isolation"
+        TEXT equipment "NOT NULL"
+        INTEGER default_rating "1-5 DEFAULT 3"
+        INTEGER user_rating "1-5 or NULL"
+        TIMESTAMP created_at "DEFAULT NOW"
+    }
+
+    workouts {
+        INTEGER id PK "AUTOINCREMENT"
+        TEXT muscle_group "NOT NULL"
+        TIMESTAMP created_at "DEFAULT NOW"
+    }
+
+    workout_exercises {
+        INTEGER id PK "AUTOINCREMENT"
+        INTEGER workout_id FK "NOT NULL"
+        INTEGER exercise_id FK "NULL on delete"
+        TEXT exercise_name "NOT NULL snapshot"
+        INTEGER position "NOT NULL 1-5"
+        BOOLEAN is_compound "NOT NULL"
+    }
+
+    workouts ||--o{ workout_exercises : "contains"
+    exercises ||--o{ workout_exercises : "referenced by"

@@ -1,0 +1,77 @@
+Legs: 1 compound (Barbell Back Squat, highest rated at 5) + 4 isolations with diverse sub-muscle groups. Core: all isolations, no compound. But Core only returned 4 exercises — the sub-muscle diversity filter is removing too aggressively. Let me check: Core has 5 distinct sub-muscle groups (Rectus Abdominis, Lower Abs, Obliques, Core Stability... that's 4). After picking one from each, the pool is empty so it stops at 4. The issue is that with 5 slots needed but only 4 distinct sub-muscle groups, it can't fill the 5th.
+
+I need to fix the algorithm to refill the pool when it runs out mid-selection.
+
+Read generator.py
+The fix: when the pool empties mid-selection (because we've exhausted all distinct sub-muscle groups), refill it from the full available list minus already-selected exercises, so we can pick a second exercise from a sub-muscle group that's already represented.
+
+Edit generator.py
+Added 6 lines
+Now restart the server and retes
+
+
+Phase 2 complete. Here's what was built:
+
+File	Purpose
+backend/models.py	ExerciseCreate, ExerciseUpdate, ExerciseResponse, RatingUpdate + validation constants
+backend/routers/init.py	Package init
+backend/routers/exercises.py	6 endpoints: muscle-groups, list/create/update/delete exercises, update rating
+backend/main.py	Updated to register exercises router
+Checkpoint results (all pass):
+
+Test	Result
+GET /api/muscle-groups	Returns 6 groups
+GET /api/exercises?muscle_group=Legs	14 exercises
+POST /api/exercises (Hip Thrust)	201, created with id 56
+POST /api/exercises (duplicate)	400, uniqueness error
+PUT /api/exercises/56/rating (5)	Updated, user_rating: 5
+PUT /api/exercises/56/rating (0)	422, validation error
+PUT /api/exercises/56 (full update)	Equipment changed to Smith Machine
+DELETE /api/exercises/56	Success message
+GET /api/exercises (count)	Back to 55
+DELETE /api/exercises/999	404
+Say "do phase 3" when ready for the workout generation algorithm.
+
+do phase 3
+
+Phase 3 complete. The backend is now fully functional. Here's what was built:
+
+File	Purpose
+backend/services/init.py	Package init
+backend/services/generator.py	Core algorithm: compound persistence, history-based exclusion, preference-weighted selection with sub-muscle diversity
+backend/routers/workouts.py	4 endpoints: generate (preview), save, history, get by ID
+backend/models.py	Added GenerateRequest, WorkoutExercise, GeneratedWorkout, SaveWorkoutRequest, WorkoutResponse
+backend/main.py	Registered workouts router
+Checkpoint results (all pass):
+
+Test	Result
+Generate Legs	5 exercises: Barbell Back Squat (compound) + 4 diverse isolations
+Generate Core	5 isolation exercises (no compound — correct)
+Save workout	Returns saved workout with ID and timestamp
+Generate Legs again (after save)	Isolations rotated, fallback notice shown when pool is small
+GET /api/workouts/history	1 saved workout with exercises
+GET /api/workouts/1	Full workout detail
+Invalid muscle group	400 error
+Nonexistent workout ID	404 error
+Bug fixed during phase: The sub-muscle diversity filter was too aggressive — when all distinct sub-muscle groups were exhausted before filling 5 slots (e.g., Core has only 4 sub-groups), the pool would empty and stop short. Fixed by refilling the pool with remaining unselected exercises when it empties mid-selection.
+
+The entire backend is done. Say "do phase 4" when ready to start the frontend.
+
+
+Phase 5 complete. The core UI flow is built. Here's what was created:
+
+File	Purpose
+MuscleGroupSelector.tsx	6-button grid (2x3), navigates to /generate/{group}
+RatingStars.tsx	5 clickable stars with 44px touch targets, aria-labels
+ExerciseCard.tsx	Exercise name, type badge (blue/green), sub-muscle, equipment, inline rating
+Dashboard.tsx	MuscleGroupSelector + recent workout summary (loading/empty states)
+GenerateWorkout.tsx	Generate on load, 5 ExerciseCards, rate inline, Generate New / Save buttons, notice banner, error/success states
+Checkpoint results (all pass):
+
+Test	Result
+npx tsc --noEmit	Clean
+Generate Legs via proxy	5 exercises, compound first
+Save Core workout via proxy	Saved with id=1
+Rate exercise via proxy	user_rating updated to 5
+Tailwind lint warnings	Fixed (min-h-[44px] → min-h-11)
+The app is now usable end-to-end — you can open localhost:5173, pick a muscle group, see the workout, rate exercises, and save. Say "do phase 6" when ready.
